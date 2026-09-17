@@ -7,20 +7,25 @@ FROM ${UPSTREAM_IMAGE}
 # Build-time root is fine. blitz.cloud only forbids root at runtime.
 USER root
 
+# Install unzip and sqlite for migration validation & extraction
+RUN apk add --no-cache unzip sqlite
+
 # 9Router already uses /app/data. Make the runtime paths explicitly writable by UID/GID 1000,
 # which is the identity blitz.cloud forces for every app.
 RUN mkdir -p /app/data /app/data-home \
     && chown -R 1000:1000 /app/data /app/data-home
 
 COPY --chown=1000:1000 rootless-start.sh /usr/local/bin/9router-rootless-start
-RUN chmod 0755 /usr/local/bin/9router-rootless-start
+COPY --chown=1000:1000 migration-server.js /usr/local/bin/migration-server.js
+RUN chmod 0755 /usr/local/bin/9router-rootless-start /usr/local/bin/migration-server.js
 
 ENV NODE_ENV=production \
     PORT=20128 \
     HOSTNAME=0.0.0.0 \
     DATA_DIR=/app/data \
     HOME=/app/data-home \
-    NEXT_TELEMETRY_DISABLED=1
+    NEXT_TELEMETRY_DISABLED=1 \
+    MIGRATION_MODE=false
 
 # This makes blitz.cloud detect /app/data as a folder that should be kept between restarts.
 VOLUME ["/app/data"]

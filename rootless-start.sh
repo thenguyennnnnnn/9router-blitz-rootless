@@ -33,5 +33,15 @@ if ! mkdir -p "$DATA_DIR/db" 2>/dev/null; then
   exit 73
 fi
 
+# Temporary migration mode check
+MIGRATION_MODE="${MIGRATION_MODE:-false}"
+
+if [ "$MIGRATION_MODE" = "true" ]; then
+  log "MIGRATION_MODE=true is active."
+  log "9Router main application will NOT start."
+  log "Starting temporary migration server on port ${PORT}..."
+  exec node /usr/local/bin/migration-server.js
+fi
+
 log "starting 9Router..."
 exec node custom-server.js
