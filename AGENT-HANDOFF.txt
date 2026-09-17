@@ -1,0 +1,21 @@
+NHIỆM VỤ: Deploy 9Router rootless lên blitz.cloud.
+
+1. Không sửa logic 9Router.
+2. Tạo public GitHub repo chứa đúng bộ wrapper này.
+3. Không commit secret thật, .env.local, token hay password.
+4. Trên Blitz chọn My own code và dán repo URL.
+5. Xác nhận build dùng Dockerfile.
+6. Port phải là 20128.
+7. Persistent/kept folder bắt buộc: /app/data.
+8. Env runtime:
+   DATA_DIR=/app/data
+   PORT=20128
+   HOSTNAME=0.0.0.0
+   NODE_ENV=production
+   JWT_SECRET=<generate mới>
+   INITIAL_PASSWORD=<generate mới>
+9. Không bật auto-update upstream.
+10. Sau deploy phải kiểm tra log có uid=1000 gid=1000 và không có EACCES/chown/su-exec.
+11. Kiểm tra web UI mở được.
+12. Restart app một lần và xác nhận dữ liệu/account vẫn còn để chứng minh /app/data persistent.
+13. Nếu lỗi, KHÔNG đổi DATA_DIR sang /tmp và KHÔNG bỏ persistence. Trả nguyên build log/runtime log.

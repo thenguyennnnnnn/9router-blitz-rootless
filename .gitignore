@@ -1,0 +1,17 @@
+# Secrets — never commit real env files
+.env
+.env.local
+.env.*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Archives
+*.zip
+*.tar.gz
+
+# Python cache (if any)
+__pycache__/
